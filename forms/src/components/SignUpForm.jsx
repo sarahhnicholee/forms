@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function SignUpForm() {
+function SignUpForm({token, setToken}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -15,10 +15,16 @@ function SignUpForm() {
     // console.log(result);
 
     try { const response = await fetch(
-      "https://fsa-jwt-practice.herokuapp.com/signup"
-    );
+      "https://fsa-jwt-practice.herokuapp.com/signup",{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password })
+      });
     const result = await response.json();
-    console.log(result);
+    setToken(result.token);
+    localStorage.setItem('token', result.token);
     } catch (error) {
       setError(error.message);
     }
@@ -28,6 +34,7 @@ function SignUpForm() {
   return (
     <>
       <h2>Sign Up!</h2>
+      <button> "Authenticate Token"</button>
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <label>
