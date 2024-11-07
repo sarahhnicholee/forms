@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios"
 
 function SignUpForm({token, setToken}) {
   const [username, setUsername] = useState("");
@@ -7,39 +8,31 @@ function SignUpForm({token, setToken}) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    // console.log("Hello 👋");
-    // const response = await fetch(
-    //   "https://fsa-jwt-practice.herokuapp.com/signup"
-    // );
-    // const result = await response.json();
-    // console.log(result);
-
-    try { const response = await fetch(
+    try { const {data} = await axios.post(
       "https://fsa-jwt-practice.herokuapp.com/signup",{
-        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password })
       });
-    const result = await response.json();
-    setToken(result.token);
-    localStorage.setItem('token', result.token);
+    // const result = await response.json();
+    setToken(data.token);
+    // localStorage.setItem('token', result.token);
+    console.log(data)
     } catch (error) {
       setError(error.message);
     }
-    // console.log("message")
   }
-
+    // console.log("message")
   return (
     <>
       <h2>Sign Up!</h2>
-      <button> "Authenticate Token"</button>
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <label>
           Username:
           <input
+          type= "email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
